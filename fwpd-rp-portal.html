@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fort Worth Police Department | Roleplay Command Portal</title>
+<meta name="description" content="Fort Worth Police Department roleplay command portal — handbook, standard operating procedures, department policy, command staff, patrol divisions, and radio codes.">
+<meta name="keywords" content="Fort Worth Police Department, FWPD, roleplay, handbook, SOP, radio codes, FiveM">
+<meta name="theme-color" content="#0b1220">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===========================================================
+   FORT WORTH POLICE DEPARTMENT — RP COMMAND PORTAL
+   Design tokens
+   =========================================================== */
+:root{
+  --fw-blue:      #0b3d91;
+  --fw-blue-light:#2f5fc4;
+  --navy:         #060d1c;
+  --navy-2:       #0b1626;
+  --panel:        rgba(18, 30, 54, 0.55);
+  --panel-solid:  #101c33;
+  --border-soft:  rgba(140, 175, 235, 0.16);
+  --ink:          #eef3fb;
+  --ink-dim:      #a9b7cf;
+  --ink-faint:    #6f7f9c;
+  --accent:       #4d8dff;
+  --accent-glow:  rgba(77, 141, 255, 0.35);
+  --gold:         #c8a24a;
+  --danger:       #e0524a;
+
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --ease: cubic-bezier(.22,.9,.32,1);
+}
+
+html[data-theme="light"]{
+  --navy: #eef2f9;
+  --navy-2: #ffffff;
+  --panel: rgba(255, 255, 255, 0.72);
+  --panel-solid: #ffffff;
+  --border-soft: rgba(11, 61, 145, 0.16);
+  --ink: #10192c;
+  --ink-dim: #445269;
+  --ink-faint: #7a8aa3;
+  --accent-glow: rgba(11, 61, 145, 0.18);
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *, *::before, *::after{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+body{
+  margin:0;
+  background: var(--navy);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background .4s var(--ease), color .4s var(--ease);
+}
+
+a{ color: inherit; text-decoration: none; }
+ul{ margin:0; padding:0; }
+img{ max-width: 100%; display:block; }
+
+/* Focus visibility */
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link{
+  position: fixed; top: -60px; left: 12px; z-index: 1000;
+  background: var(--fw-blue); color: #fff; padding: 10px 16px; border-radius: var(--radius-sm);
+  transition: top .2s var(--ease);
+}
+.skip-link:focus{ top: 12px; }
+
+/* ===== scroll progress ===== */
+.scroll-progress{
+  position: fixed; top:0; left:0; height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--fw-blue-light), var(--gold));
+  z-index: 1200; transition: width .1s linear;
+}
+
+/* ===========================================================
+   NAVBAR
+   =========================================================== */
+.navbar{
+  position: fixed; top:0; left:0; right:0; z-index: 900;
+  background: rgba(6, 13, 28, 0.55);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid transparent;
+  transition: background .35s var(--ease), border-color .35s var(--ease), padding .35s var(--ease);
+}
+html[data-theme="light"] .navbar{ background: rgba(255,255,255,0.65); }
+.navbar.scrolled{
+  border-bottom-color: var(--border-soft);
+  box-shadow: 0 10px 30px -18px rgba(0,0,0,.6);
+}
+.navbar-inner{
+  max-width: 1320px; margin: 0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 18px 28px; transition: padding .35s var(--ease);
+}
+.navbar.scrolled .navbar-inner{ padding: 11px 28px; }
+
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand-badge{
+  display:flex; color: var(--fw-blue-light);
+  filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+.brand-text{ display:flex; flex-direction:column; line-height:1.05; }
+.brand-text strong{ font-family: var(--font-display); font-weight:700; font-size: 1.05rem; letter-spacing:.06em; }
+.brand-text em{ font-style:normal; font-size:.62rem; letter-spacing:.22em; color: var(--ink-faint); }
+
+.nav-links{ display:flex; gap: 4px; }
+.nav-link{
+  position:relative; padding: 8px 14px; font-size:.87rem; font-weight:500; color: var(--ink-dim);
+  border-radius: var(--radius-sm); transition: color .2s var(--ease), background .2s var(--ease);
+}
+.nav-link:hover{ color: var(--ink); background: rgba(255,255,255,0.04); }
+.nav-link.active{ color: var(--ink); }
+.nav-link.active::after{
+  content:""; position:absolute; left:14px; right:14px; bottom:2px; height:2px;
+  background: linear-gradient(90deg, var(--fw-blue-light), var(--gold));
+  border-radius: 2px;
+}
+
+.navbar-actions{ display:flex; align-items:center; gap: 8px; }
+.icon-btn{
+  width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border-soft); color: var(--ink);
+  border-radius: 10px; cursor:pointer; transition: background .2s var(--ease), transform .2s var(--ease), border-color .2s var(--ease);
+}
+.icon-btn:hover{ background: rgba(77,141,255,0.16); border-color: var(--accent-glow); transform: translateY(-1px); }
+
+.hamburger{
+  display:none; width:38px; height:38px; border-radius:10px;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border-soft);
+  cursor:pointer; flex-direction:column; align-items:center; justify-content:center; gap:5px;
+}
+.hamburger span{ width:18px; height:2px; background: var(--ink); border-radius:2px; transition: transform .3s var(--ease), opacity .3s var(--ease); }
+.hamburger.open span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2){ opacity:0; }
+.hamburger.open span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+/* ===== search panel ===== */
+.search-panel{
+  position: fixed; top: 84px; left:50%; transform: translate(-50%,-14px); width:min(640px, 92vw);
+  background: var(--panel-solid); border:1px solid var(--border-soft); border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px -20px rgba(0,0,0,.65);
+  z-index: 950; opacity:0; visibility:hidden; pointer-events:none;
+  transition: opacity .25s var(--ease), transform .25s var(--ease), visibility .25s;
+}
+.search-panel.open{ opacity:1; visibility:visible; transform: translate(-50%,0); pointer-events:auto; }
+.search-panel-inner{ display:flex; align-items:center; gap:12px; padding: 16px 18px; border-bottom: 1px solid var(--border-soft); color: var(--ink-faint); }
+.search-panel-inner input{
+  flex:1; background:transparent; border:none; outline:none; color: var(--ink); font-size:.98rem; font-family: var(--font-body);
+}
+.search-panel-inner input::placeholder{ color: var(--ink-faint); }
+.search-results{ max-height: 50vh; overflow-y:auto; padding: 6px; }
+.search-result{
+  display:block; padding: 12px 14px; border-radius: var(--radius-sm); cursor:pointer;
+  transition: background .15s var(--ease);
+}
+.search-result:hover{ background: rgba(77,141,255,0.1); }
+.search-result .sr-cat{ font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color: var(--accent); font-weight:600; }
+.search-result .sr-title{ font-weight:600; margin: 2px 0; }
+.search-result .sr-snippet{ font-size:.84rem; color: var(--ink-dim); }
+.search-empty{ padding: 22px 16px; color: var(--ink-faint); font-size:.9rem; text-align:center; }
+mark{ background: rgba(200,162,74,0.35); color: inherit; border-radius:3px; padding: 0 1px; }
+
+/* ===== back to top ===== */
+.back-to-top{
+  position: fixed; right: 24px; bottom: 24px; width: 46px; height:46px; border-radius: 50%;
+  background: var(--fw-blue); color:#fff; border: 1px solid var(--accent-glow); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; z-index: 850;
+  opacity:0; transform: translateY(14px); pointer-events:none;
+  transition: opacity .3s var(--ease), transform .3s var(--ease), background .2s;
+  box-shadow: 0 12px 30px -10px rgba(11,61,145,.7);
+}
+.back-to-top.visible{ opacity:1; transform: translateY(0); pointer-events:auto; }
+.back-to-top:hover{ background: var(--fw-blue-light); }
+
+/* ===========================================================
+   HERO
+   =========================================================== */
+.hero{
+  position:relative; min-height: 100svh; display:flex; align-items:center; justify-content:center;
+  overflow:hidden; padding: 120px 24px 80px;
+}
+.hero-bg{
+  position:absolute; inset: -40px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(77,141,255,0.16), transparent 55%),
+    radial-gradient(circle at 82% 78%, rgba(11,61,145,0.28), transparent 50%),
+    linear-gradient(180deg, #050b17 0%, #081327 55%, #050a15 100%);
+  filter: blur(0px) brightness(.7);
+  will-change: transform;
+}
+.hero-scanline{
+  position:absolute; inset:0; pointer-events:none; opacity:.5;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
+}
+.hero-content{ position:relative; z-index:2; max-width: 900px; text-align:center; margin: 0 auto; }
+.hero-eyebrow{
+  font-family: var(--font-mono); font-size:.72rem; letter-spacing:.24em; color: var(--gold);
+  margin: 0 0 18px;
+}
+.hero-title{
+  font-family: var(--font-display); font-weight:700; text-transform:uppercase;
+  font-size: clamp(2.6rem, 7vw, 5.4rem); line-height: .96; letter-spacing:.01em; margin:0;
+  color: var(--ink);
+}
+.hero-title span{
+  display:block; font-size: .5em; letter-spacing:.16em; color: var(--fw-blue-light);
+  margin-top: 10px; text-shadow: 0 0 30px var(--accent-glow);
+}
+.hero-subtitle{
+  font-size: 1.1rem; color: var(--ink-dim); margin: 26px 0 40px; letter-spacing:.02em;
+}
+.hero-subtitle .dot{ color: var(--gold); margin: 0 8px; }
+
+.hero-actions{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom: 56px; }
+.btn{
+  display:inline-flex; align-items:center; gap:10px; padding: 14px 26px; border-radius: var(--radius-md);
+  font-weight:600; font-size:.92rem; letter-spacing:.02em; cursor:pointer; border:1px solid transparent;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease);
+}
+.btn svg{ transition: transform .25s var(--ease); }
+.btn:hover svg{ transform: translateX(3px); }
+.btn-primary{
+  background: linear-gradient(135deg, var(--fw-blue), var(--fw-blue-light));
+  color:#fff; box-shadow: 0 14px 34px -14px rgba(11,61,145,.85);
+}
+.btn-primary:hover{ transform: translateY(-3px); box-shadow: 0 20px 42px -14px rgba(11,61,145,1); }
+.btn-secondary{
+  background: rgba(255,255,255,0.05); color: var(--ink); border-color: var(--border-soft);
+  backdrop-filter: blur(6px);
+}
+.btn-secondary:hover{ transform: translateY(-3px); border-color: var(--accent-glow); background: rgba(255,255,255,0.08); }
+
+.hero-stats{ display:flex; gap: 48px; justify-content:center; flex-wrap:wrap; }
+.hero-stat{ display:flex; flex-direction:column; align-items:center; }
+.hero-stat strong{ font-family: var(--font-display); font-size:1.9rem; color: var(--ink); }
+.hero-stat span{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color: var(--ink-faint); margin-top:2px; }
+
+.hero-scroll-cue{
+  position:absolute; bottom: 28px; left:50%; transform: translateX(-50%); z-index:2;
+  width: 26px; height: 42px; border: 2px solid var(--border-soft); border-radius: 20px;
+  display:flex; justify-content:center; padding-top:7px;
+}
+.hero-scroll-cue span{ width:4px; height:8px; background: var(--gold); border-radius:2px; animation: scrollcue 1.8s infinite ease; }
+@keyframes scrollcue{ 0%{ transform: translateY(0); opacity:1;} 70%{ transform: translateY(10px); opacity:0;} 100%{opacity:0;} }
+
+/* ===========================================================
+   SECTIONS (general)
+   =========================================================== */
+.section{ position:relative; padding: 110px 24px; }
+.section-alt{ background: linear-gradient(180deg, transparent, rgba(11,20,38,0.55), transparent); }
+html[data-theme="light"] .section-alt{ background: linear-gradient(180deg, transparent, rgba(11,61,145,0.045), transparent); }
+.section-inner{ max-width: 1200px; margin: 0 auto; }
+.section-eyebrow{
+  font-family: var(--font-mono); font-size:.72rem; letter-spacing:.22em; color: var(--accent);
+  margin: 0 0 12px;
+}
+.section-title{
+  font-family: var(--font-display); font-weight:700; text-transform:uppercase;
+  font-size: clamp(1.9rem, 4vw, 2.7rem); letter-spacing:.01em; margin:0 0 16px;
+}
+.section-lede{ color: var(--ink-dim); max-width: 680px; font-size:1.02rem; margin-bottom: 48px; }
+
+/* reveal-on-scroll */
+.reveal{ opacity:0; transform: translateY(26px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in-view{ opacity:1; transform: translateY(0); }
+
+/* ===========================================================
+   ACCORDIONS
+   =========================================================== */
+.accordion{ display:flex; flex-direction:column; gap: 10px; }
+.accordion-item{
+  background: var(--panel); border: 1px solid var(--border-soft); border-radius: var(--radius-md);
+  overflow:hidden; backdrop-filter: blur(10px); transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.accordion-item[open]{ border-color: var(--accent-glow); box-shadow: 0 18px 40px -26px rgba(77,141,255,.5); }
+.accordion-item summary{
+  list-style:none; cursor:pointer; display:flex; align-items:center; gap:16px; padding: 18px 22px;
+  font-weight:600; font-size: 1.02rem; user-select:none;
+}
+.accordion-item summary::-webkit-details-marker{ display:none; }
+.acc-num{
+  font-family: var(--font-mono); font-size:.78rem; color: var(--gold); background: rgba(200,162,74,0.1);
+  border: 1px solid rgba(200,162,74,0.28); border-radius: 6px; padding: 3px 8px; flex-shrink:0;
+}
+.acc-title{ flex:1; }
+.acc-chevron{
+  width:20px; height:20px; flex-shrink:0; position:relative;
+}
+.acc-chevron::before, .acc-chevron::after{
+  content:""; position:absolute; background: var(--ink-faint); border-radius:2px; transition: transform .3s var(--ease);
+}
+.acc-chevron::before{ width:12px; height:2px; top:9px; left:4px; }
+.acc-chevron::after{ width:2px; height:12px; top:4px; left:9px; }
+.accordion-item[open] .acc-chevron::after{ transform: rotate(90deg) translateX(0); opacity:0; }
+.acc-body{ padding: 0 22px 24px 22px; color: var(--ink-dim); font-size:.95rem; }
+.acc-body p{ margin: 0 0 12px; }
+.acc-body p:last-child{ margin-bottom:0; }
+.acc-body ol{ margin:0; padding-left: 1.3em; display:flex; flex-direction:column; gap:8px; }
+.acc-body li::marker{ color: var(--accent); font-family: var(--font-mono); font-weight:600; }
+
+/* ===========================================================
+   POLICY CARDS
+   =========================================================== */
+.policy-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+.policy-card{
+  background: var(--panel); border:1px solid var(--border-soft); border-radius: var(--radius-lg);
+  padding: 26px 24px; backdrop-filter: blur(10px);
+  transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.policy-card:hover{ transform: translateY(-6px); border-color: var(--accent-glow); box-shadow: 0 26px 50px -28px rgba(77,141,255,.55); }
+.policy-icon{
+  width: 52px; height:52px; border-radius: 12px; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg, rgba(11,61,145,0.35), rgba(77,141,255,0.12)); color: var(--fw-blue-light);
+  margin-bottom: 18px; border: 1px solid var(--accent-glow);
+}
+.policy-card h3{ margin: 0 0 8px; font-family: var(--font-display); font-size:1.2rem; letter-spacing:.01em; }
+.policy-card p{ margin:0; color: var(--ink-dim); font-size:.9rem; }
+
+/* ===========================================================
+   COMMAND STAFF
+   =========================================================== */
+.staff-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px; }
+.staff-card{
+  background: var(--panel); border:1px solid var(--border-soft); border-radius: var(--radius-lg);
+  padding: 28px 22px; text-align:center; backdrop-filter: blur(10px);
+  transition: transform .3s var(--ease), border-color .3s var(--ease);
+}
+.staff-card:hover{ transform: translateY(-6px) scale(1.01); border-color: var(--accent-glow); }
+.staff-photo{
+  width: 84px; height:84px; margin: 0 auto 16px; border-radius: 50%;
+  background: linear-gradient(160deg, rgba(11,61,145,0.4), rgba(6,13,28,0.4));
+  border: 1px solid var(--accent-glow); display:flex; align-items:center; justify-content:center;
+  color: var(--fw-blue-light);
+}
+.staff-photo svg{ width:38px; height:38px; }
+.staff-rank{ font-family: var(--font-mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color: var(--gold); margin: 0 0 6px; }
+.staff-name{ font-family: var(--font-display); font-size:1.3rem; margin: 0 0 10px; }
+.staff-desc{ color: var(--ink-dim); font-size:.86rem; margin:0; }
+
+/* ===========================================================
+   PATROL DIVISIONS
+   =========================================================== */
+.division-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:18px; }
+.division-card{
+  background: var(--panel); border:1px solid var(--border-soft); border-radius: var(--radius-lg);
+  padding: 24px; backdrop-filter: blur(10px);
+  transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.division-card:hover{ transform: translateY(-5px); border-color: var(--accent-glow); box-shadow: 0 24px 46px -28px rgba(77,141,255,.5); }
+.division-icon{
+  width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  background: rgba(77,141,255,0.1); color: var(--fw-blue-light); border:1px solid var(--accent-glow); margin-bottom:14px;
+}
+.division-card h3{ margin:0 0 8px; font-family: var(--font-display); font-size:1.15rem; }
+.division-card p{ margin:0 0 14px; color: var(--ink-dim); font-size:.87rem; }
+.division-stats{ display:flex; gap:10px; flex-wrap:wrap; }
+.division-stats span{
+  font-family: var(--font-mono); font-size:.72rem; color: var(--accent); background: rgba(77,141,255,0.08);
+  border: 1px solid var(--accent-glow); padding: 4px 9px; border-radius: 6px;
+}
+
+/* ===========================================================
+   RADIO CODES
+   =========================================================== */
+.code-filter-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 26px; }
+.filter-chip{
+  background: rgba(255,255,255,0.04); border:1px solid var(--border-soft); color: var(--ink-dim);
+  padding: 8px 16px; border-radius: 999px; font-size:.82rem; cursor:pointer; font-weight:500;
+  transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
+}
+.filter-chip:hover{ color: var(--ink); }
+.filter-chip.active{ background: var(--fw-blue); border-color: var(--fw-blue-light); color:#fff; }
+
+.code-table-wrap{
+  border: 1px solid var(--border-soft); border-radius: var(--radius-lg); overflow: hidden;
+  background: var(--panel); backdrop-filter: blur(10px);
+}
+.code-table{ width:100%; border-collapse: collapse; }
+.code-table thead th{
+  text-align:left; font-family: var(--font-mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase;
+  color: var(--ink-faint); padding: 16px 20px; border-bottom: 1px solid var(--border-soft);
+  position: sticky; top:0; background: var(--panel-solid);
+}
+.code-table tbody tr{ border-bottom: 1px solid var(--border-soft); transition: background .15s var(--ease); }
+.code-table tbody tr:last-child{ border-bottom:none; }
+.code-table tbody tr:hover{ background: rgba(77,141,255,0.06); }
+.code-table td{ padding: 13px 20px; font-size:.9rem; color: var(--ink-dim); }
+.code-table td:first-child{ font-family: var(--font-mono); font-weight:600; color: var(--ink); white-space:nowrap; }
+.code-table td .cat-badge{
+  font-size:.68rem; letter-spacing:.06em; text-transform:uppercase; padding: 3px 9px; border-radius:6px;
+  background: rgba(200,162,74,0.12); color: var(--gold); border: 1px solid rgba(200,162,74,0.28);
+}
+.code-table tbody tr.hidden{ display:none; }
+
+/* ===========================================================
+   FOOTER
+   =========================================================== */
+.footer{ border-top: 1px solid var(--border-soft); padding: 56px 24px 0; background: rgba(4,9,19,0.6); }
+html[data-theme="light"] .footer{ background: rgba(11,61,145,0.03); }
+.footer-inner{
+  max-width: 1200px; margin: 0 auto; display:flex; flex-wrap:wrap; gap: 32px; justify-content:space-between; align-items:flex-start;
+  padding-bottom: 34px;
+}
+.footer-brand{ display:flex; gap:12px; align-items:center; }
+.footer-brand .brand-badge{ color: var(--fw-blue-light); }
+.footer-title{ font-family: var(--font-display); font-size:1.15rem; margin:0; letter-spacing:.02em; }
+.footer-tag{ font-size:.78rem; color: var(--ink-faint); margin: 3px 0 0; }
+.footer-links{ display:flex; flex-wrap:wrap; gap: 18px; }
+.footer-links a{ font-size:.86rem; color: var(--ink-dim); transition: color .2s var(--ease); }
+.footer-links a:hover{ color: var(--ink); }
+.footer-social{ display:flex; gap:10px; }
+.footer-social a{
+  width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  border: 1px solid var(--border-soft); color: var(--ink-dim); transition: color .2s var(--ease), border-color .2s var(--ease);
+}
+.footer-social a:hover{ color: var(--fw-blue-light); border-color: var(--accent-glow); }
+.footer-bottom{
+  border-top: 1px solid var(--border-soft); padding: 18px 0; text-align:center;
+  font-size:.78rem; color: var(--ink-faint);
+}
+
+/* ===========================================================
+   RESPONSIVE
+   =========================================================== */
+@media (max-width: 900px){
+  .nav-links{
+    position: fixed; top: 68px; left:0; right:0; bottom:0; flex-direction:column; gap:2px;
+    background: var(--panel-solid); padding: 18px; transform: translateY(-12px); opacity:0; visibility:hidden;
+    transition: opacity .3s var(--ease), transform .3s var(--ease), visibility .3s;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav-links.open{ opacity:1; visibility:visible; transform: translateY(0); }
+  .nav-link{ padding: 14px 16px; font-size:1rem; }
+  .hamburger{ display:flex; }
+  .hero-stats{ gap: 28px; }
+}
+
+@media (max-width: 600px){
+  .navbar-inner{ padding: 14px 16px; }
+  .section{ padding: 80px 16px; }
+  .hero{ padding: 110px 16px 70px; }
+  .footer-inner{ flex-direction:column; }
+  .search-panel{ top: 74px; width: 94vw; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Skip link for accessibility -->
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="#home" class="brand">
+      <span class="brand-badge" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="30" height="30">
+          <path d="M24 3 L43 11 V22 C43 33 35.5 41.5 24 45 C12.5 41.5 5 33 5 22 V11 Z" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M24 12 L24 30 M16 30 L32 30" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="24" cy="20" r="4.2" fill="none" stroke="currentColor" stroke-width="2.2"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <strong>FORT WORTH</strong>
+        <em>POLICE DEPARTMENT</em>
+      </span>
+    </a>
+
+    <nav class="nav-links" id="navLinks" aria-label="Primary">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#handbook" class="nav-link">Handbook</a>
+      <a href="#sop" class="nav-link">SOP</a>
+      <a href="#policies" class="nav-link">Policies</a>
+      <a href="#command" class="nav-link">Command Staff</a>
+      <a href="#codes" class="nav-link">Radio Codes</a>
+    </nav>
+
+    <div class="navbar-actions">
+      <button class="icon-btn" id="searchToggle" aria-label="Open search" aria-expanded="false" aria-controls="searchPanel">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle light and dark mode">
+        <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Floating search panel -->
+<div class="search-panel" id="searchPanel" role="dialog" aria-modal="true" aria-label="Site search">
+  <div class="search-panel-inner">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" id="searchInput" placeholder="Search the handbook, SOPs, policies, and radio codes…" aria-label="Search site content" autocomplete="off">
+    <button class="icon-btn" id="searchClose" aria-label="Close search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+  <div class="hero-scanline" aria-hidden="true"></div>
+  <div class="hero-content reveal">
+    <p class="hero-eyebrow">CITY OF FORT WORTH &nbsp;·&nbsp; ROLEPLAY COMMAND PORTAL</p>
+    <h1 class="hero-title">FORT WORTH<span>POLICE DEPARTMENT</span></h1>
+    <p class="hero-subtitle">Professionalism <span class="dot">•</span> Integrity <span class="dot">•</span> Service</p>
+    <div class="hero-actions">
+      <a href="#handbook" class="btn btn-primary">
+        <span>View Handbook</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#sop" class="btn btn-secondary">
+        <span>View SOP</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><strong>1</strong><span>Department Employees</span></div>
+      <div class="hero-stat"><strong>24/7</strong><span>Dispatch Coverage</span></div>
+    </div>
+  </div>
+  <a href="#handbook" class="hero-scroll-cue" aria-label="Scroll to content">
+    <span></span>
+  </a>
+</section>
+
+<!-- ============ HANDBOOK ============ -->
+<section class="section" id="handbook">
+  <div class="section-inner">
+    <p class="section-eyebrow">GENERAL ORDERS</p>
+    <h2 class="section-title">Department Handbook</h2>
+    <p class="section-lede">The governing standards of conduct, appearance, and duty performance for every sworn member of the Fort Worth Police Department roleplay division.</p>
+
+    <div class="accordion" id="handbookAccordion" data-searchable="handbook">
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">01</span><span class="acc-title">Mission Statement</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>The Fort Worth Police Department exists to protect the life, property, and constitutional rights of every resident and visitor within our jurisdiction. Our mission is carried out through impartial enforcement of the law, proactive community engagement, and a standard of accountability that begins with every individual officer and extends through the full chain of command.</p>
+          <p>We measure our success not only by arrests made or citations issued, but by the trust the community places in us. Every member of this department, sworn or civilian, is expected to act as a steward of that trust in every interaction, on and off duty.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">02</span><span class="acc-title">Core Values</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Integrity: Officers act consistently with honesty and the law, even when no one is watching. Fabrication of reports, evidence, or radio traffic is grounds for immediate suspension pending investigation.</p>
+          <p>Professionalism: Every interaction, from a routine traffic stop to a high-risk warrant, is conducted with composure and respect for the individuals involved, including suspects and offenders.</p>
+          <p>Service: The department exists for the community it serves. Officers are expected to treat calls for service, regardless of severity, with the same diligence and courtesy.</p>
+          <p>Accountability: Mistakes are corrected through supervision, retraining, and if necessary, discipline — not concealment. Supervisors are expected to document and address deficiencies promptly.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">03</span><span class="acc-title">Department Expectations</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers are expected to report for shift briefing on time, in proper uniform, with assigned equipment inspected and serviceable. Radio checks are mandatory at the start of every shift before units are marked available.</p>
+          <p>All personnel are expected to remain reachable via department radio channels while on duty and to relay unit status (10-8, 10-6, 10-7, etc.) promptly and accurately so dispatch and command staff maintain an accurate picture of patrol coverage.</p>
+          <p>Members are expected to know and apply the contents of this handbook and the associated Standard Operating Procedures. Ignorance of policy is not a defense in an internal review.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">04</span><span class="acc-title">Professional Conduct</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers will address members of the public, suspects, and fellow officers with respect and restraint. Use of profanity, racial or derogatory language, or demeaning remarks toward any individual is strictly prohibited and subject to immediate disciplinary review.</p>
+          <p>De-escalation is the preferred approach in all non-lethal encounters. Officers are expected to attempt verbal resolution before escalating to physical control tactics whenever the situation allows for it.</p>
+          <p>Off-duty conduct that reflects poorly on the department, including conduct within the broader roleplay community, may be subject to internal review at the discretion of Command Staff.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">05</span><span class="acc-title">Uniform Standards</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>The standard patrol uniform consists of the department-issue navy uniform shirt and trousers, duty belt with authorized equipment, agency patches on both shoulders, a visible name plate, and badge. Uniforms must be clean, pressed, and free of unauthorized modification.</p>
+          <p>Specialty units (SWAT, K9, Traffic, Motors) may be issued distinct uniform variants appropriate to their function, subject to approval from their division commander.</p>
+          <p>Personal grooming must meet department standards for a professional appearance. Visible unauthorized patches, pins, or modifications to the uniform are not permitted while on duty.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">06</span><span class="acc-title">Vehicle Standards</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Marked patrol vehicles must be inspected at the start of each shift for damage, cleanliness, and functioning emergency equipment, including light bars, sirens, and dash camera systems. Any deficiency must be reported to a supervisor before the vehicle is placed into service.</p>
+          <p>Vehicles are to be operated in accordance with posted traffic laws except when responding to a Priority 1 call or engaged in an authorized pursuit, at which point department pursuit policy governs.</p>
+          <p>Unmarked and specialty unit vehicles must display authorized emergency equipment only, and their assignment is tracked through the division commander's roster.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">07</span><span class="acc-title">Use of Force</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Force must be objectively reasonable, necessary, and proportional to the threat presented, consistent with the department's Use of Force Continuum (see SOP section). Officers will de-escalate whenever it is safe and feasible to do so.</p>
+          <p>Any application of force above compliant handcuffing must be documented in a use-of-force report and reviewed by a shift supervisor before the officer clears the scene.</p>
+          <p>Deadly force is authorized only when an officer reasonably believes it is necessary to prevent death or serious bodily harm to themselves or another person.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">08</span><span class="acc-title">Arrest Procedures</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers must have probable cause prior to effecting a custodial arrest and should articulate that probable cause clearly in their incident report. Handcuffing will be double-locked and checked for fit once applied.</p>
+          <p>Miranda warnings must be read prior to any custodial interrogation. Statements made in response to un-Mirandized custodial questioning may be inadmissible and should be noted accordingly in the report.</p>
+          <p>Arrestees are to be searched incident to arrest, secured safely in the transport vehicle, and transported directly to booking absent an authorized detour for medical clearance.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">09</span><span class="acc-title">Traffic Stops</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers will select a safe location to conduct a stop, activate emergency lighting, and notify dispatch of location, plate, and vehicle description prior to approach whenever possible.</p>
+          <p>Approach the vehicle from the driver's side rear quarter unless traffic conditions dictate a passenger-side approach. Maintain a visible position relative to vehicle occupants at all times.</p>
+          <p>Explain the reason for the stop, request documentation, and process the encounter (warning, citation, or arrest) as appropriate to the violation observed.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">10</span><span class="acc-title">Civilian Contacts</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Consensual encounters, investigative detentions, and arrests are legally distinct and officers must be able to articulate which category applies to a given contact and the legal basis supporting it.</p>
+          <p>Officers will identify themselves by name and department at the start of an enforcement contact unless doing so would jeopardize officer safety or an ongoing investigation.</p>
+          <p>Members of the public are free to decline a consensual encounter and walk away absent reasonable suspicion of criminal activity justifying a detention.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">11</span><span class="acc-title">Pursuits</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Vehicle pursuits will be initiated only for offenses serious enough to justify the risk to officers and the public, and must be continuously evaluated against that risk as the pursuit develops.</p>
+          <p>The primary unit will broadcast location, direction of travel, speed, and traffic conditions continuously. A supervisor may terminate any pursuit at their discretion.</p>
+          <p>Units not directly involved in the pursuit will not join without authorization from the supervising unit or dispatch, to avoid unnecessary congestion of the pursuit corridor.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">12</span><span class="acc-title">Report Writing</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Reports must be factual, chronological, and free of subjective opinion beyond what is required to establish probable cause or officer observations. Use the reporting party's own words where relevant, in quotation marks.</p>
+          <p>All reports involving arrest, use of force, or property seizure must be submitted and approved by a supervisor before the end of the reporting officer's shift, absent an approved extension.</p>
+          <p>Body camera footage, when applicable, should be referenced by timestamp in the narrative to assist future review.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">13</span><span class="acc-title">Evidence Handling</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>All evidence must be logged, photographed in place prior to collection when feasible, and packaged to prevent contamination or loss. Chain of custody documentation begins at the moment of seizure.</p>
+          <p>Evidence is to be submitted to the evidence unit before end of shift. Any evidence retained overnight in a vehicle or locker must be logged with a supervisor's countersignature.</p>
+          <p>Officers who discover a break in chain of custody must report it to a supervisor immediately rather than attempting to correct documentation retroactively.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">14</span><span class="acc-title">Court Procedures</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers subpoenaed for court appearances are required to attend in proper uniform or approved civilian attire and to review their report and any relevant footage beforehand.</p>
+          <p>Testimony must be limited to firsthand knowledge and documented facts. Officers should never speculate or embellish testimony to bolster a case.</p>
+          <p>Any scheduling conflict with a court appearance must be raised with a supervisor as early as possible so it can be resolved through the department's liaison with the court.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">15</span><span class="acc-title">Officer Safety</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers are expected to maintain situational awareness at all times, request backup for any contact that presents an elevated risk, and avoid unnecessarily isolating themselves from support during high-risk contacts.</p>
+          <p>Cover officers should position themselves to observe the contact officer and any subjects without narrowing their own field of view or creating a crossfire risk with other units.</p>
+          <p>Any officer who reports feeling unsafe on a call has full authority to request additional units or disengage until backup arrives, without requiring further justification in the moment.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">16</span><span class="acc-title">Probationary Officers</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Newly appointed officers serve a probationary period during which they are paired with a Field Training Officer and evaluated on report writing, radio discipline, tactical decision-making, and professionalism.</p>
+          <p>Probationary officers may not operate as a solo unit or serve as the primary unit on high-risk calls until cleared by their Field Training Officer and approved by a Watch Commander.</p>
+          <p>Performance concerns during probation are documented in weekly evaluations and shared directly with the officer to allow for correction before the probationary period concludes.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">17</span><span class="acc-title">Leave Policy</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Requests for scheduled leave should be submitted to a shift supervisor with as much advance notice as reasonably possible so shift coverage can be arranged.</p>
+          <p>Extended leave of absence requests are reviewed by Command Staff and communicated back to the requesting officer with an expected return timeline where applicable.</p>
+          <p>Officers returning from extended leave may be required to complete a brief refresher review with their supervisor before resuming solo patrol duties.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">18</span><span class="acc-title">Attendance</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers are expected to attend their assigned shifts and briefings punctually. Repeated unexcused absence or tardiness is addressed first through supervisor counseling and, if uncorrected, through formal discipline.</p>
+          <p>Officers unable to attend a scheduled shift are expected to notify their supervisor as far in advance as possible so shift coverage can be adjusted.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">19</span><span class="acc-title">Promotions</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Promotions are based on demonstrated proficiency, time in grade, leadership potential, and a clean disciplinary record. Command Staff review candidates against a standard set of criteria rather than seniority alone.</p>
+          <p>Officers seeking promotion may be asked to complete a written or practical evaluation appropriate to the rank sought, in addition to a review of their service record.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">20</span><span class="acc-title">Discipline</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Discipline follows a progressive model where appropriate: verbal counseling, written reprimand, suspension, and termination, scaled to the severity and frequency of the infraction.</p>
+          <p>Serious violations, including dishonesty, excessive force, or abuse of authority, may bypass progressive discipline and result in immediate suspension pending an internal affairs review.</p>
+          <p>Officers under review retain the right to explain their actions to the reviewing supervisor before final disciplinary action is determined.</p>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">21</span><span class="acc-title">Resignations</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <p>Officers who wish to resign are asked to provide written notice to their supervisor and to complete an out-processing checklist covering the return of issued equipment, credentials, and vehicle access.</p>
+          <p>Exit interviews are optional but encouraged, and provide Command Staff with feedback used to improve training and department operations.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOP ============ -->
+<section class="section section-alt" id="sop">
+  <div class="section-inner">
+    <p class="section-eyebrow">TACTICAL REFERENCE</p>
+    <h2 class="section-title">Standard Operating Procedures</h2>
+    <p class="section-lede">Numbered field procedures for common and high-risk scenarios. SOPs supplement, and do not replace, the judgment of the officer on scene.</p>
+
+    <div class="accordion" id="sopAccordion" data-searchable="sop">
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S1</span><span class="acc-title">Traffic Stops</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Select a safe stop location and activate emergency lighting.</li>
+            <li>Notify dispatch of plate, location, and number of occupants.</li>
+            <li>Approach with awareness of traffic flow and occupant movement.</li>
+            <li>Request license and registration; explain the reason for the stop.</li>
+            <li>Run the license and plate through dispatch before returning to the vehicle.</li>
+            <li>Issue a warning, citation, or proceed to arrest procedures as warranted.</li>
+            <li>Clear the stop and advise dispatch of the outcome.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S2</span><span class="acc-title">Felony Stops</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Position patrol vehicle to provide cover, offset from the suspect vehicle.</li>
+            <li>Request backup and wait for at least one additional unit before proceeding when feasible.</li>
+            <li>Give loud, clear verbal commands from a position of cover.</li>
+            <li>Direct occupants out one at a time, hands visible, walking backward toward officers.</li>
+            <li>Handcuff and search each subject before moving to the next.</li>
+            <li>Clear the vehicle once all occupants are secured.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S3</span><span class="acc-title">Foot Pursuits</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Broadcast direction and description of the fleeing subject immediately.</li>
+            <li>Continuously update location as the pursuit progresses.</li>
+            <li>Evaluate terrain, visibility, and backup availability throughout.</li>
+            <li>Disengage if the subject enters an unsecured structure without backup present, absent an immediate threat to others.</li>
+            <li>Coordinate a perimeter with responding units if the subject is lost from sight.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S4</span><span class="acc-title">Vehicle Pursuits</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Confirm justification for pursuit against the severity of the underlying offense.</li>
+            <li>Broadcast location, speed, and direction of travel continuously.</li>
+            <li>Designate a primary and secondary unit; all other units remain clear of the pursuit path.</li>
+            <li>Request supervisor authorization to continue at defined intervals or upon significant risk change.</li>
+            <li>Terminate immediately upon supervisor order or when risk to the public outweighs the need for apprehension.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S5</span><span class="acc-title">Domestic Violence</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Separate involved parties upon arrival and interview individually.</li>
+            <li>Identify the primary aggressor based on injuries, statements, and prior history.</li>
+            <li>Document visible injuries with photographs where possible.</li>
+            <li>Advise victims of available resources and protective order procedures.</li>
+            <li>Effect arrest where probable cause for an offense exists, consistent with department policy.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S6</span><span class="acc-title">Shots Fired</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Broadcast "shots fired" along with location and direction if known.</li>
+            <li>Move to cover and assess for injured officers or civilians.</li>
+            <li>Establish a perimeter and request additional units.</li>
+            <li>Render first aid or request EMS for any injured persons once the scene is reasonably secure.</li>
+            <li>Preserve the scene for evidence collection once secured.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S7</span><span class="acc-title">Barricaded Subjects</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Establish an inner and outer perimeter at a safe distance.</li>
+            <li>Notify a supervisor and request SWAT and negotiator response.</li>
+            <li>Evacuate nearby civilians where it can be done safely.</li>
+            <li>Attempt to establish communication only under the direction of a negotiator or supervisor.</li>
+            <li>Hold position and maintain the perimeter until relieved or the incident is resolved.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S8</span><span class="acc-title">Officer Down</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Broadcast "officer down" with exact location immediately.</li>
+            <li>All available units respond code 3 unless directed otherwise by dispatch or a supervisor.</li>
+            <li>Render immediate first aid and request EMS to stage nearby.</li>
+            <li>Secure the immediate area to allow safe medical access.</li>
+            <li>Designate a unit to escort or guide EMS to the officer's location.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S9</span><span class="acc-title">Medical Calls</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Request EMS response with a description of the nature of the medical emergency.</li>
+            <li>Provide basic first aid within the officer's training until EMS arrives.</li>
+            <li>Secure the scene for EMS access, including crowd or traffic control as needed.</li>
+            <li>Gather basic information for the incident report once the patient is stable or transported.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S10</span><span class="acc-title">Search Warrants</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Confirm the warrant is signed, current, and matches the location to be searched.</li>
+            <li>Brief all participating units on entry plan, roles, and known risks beforehand.</li>
+            <li>Announce presence and authority prior to entry, absent a court-approved no-knock exception.</li>
+            <li>Clear and secure the location before the search team begins collecting evidence.</li>
+            <li>Log all seized items on scene with a corresponding inventory left with occupants.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S11</span><span class="acc-title">Arrest Warrants</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Verify warrant validity and subject identity through dispatch prior to service.</li>
+            <li>Conduct surveillance or briefing on the subject's last known location where practical.</li>
+            <li>Approach with sufficient units to safely take the subject into custody.</li>
+            <li>Advise the subject of the warrant and transport to booking upon arrest.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S12</span><span class="acc-title">Evidence Collection</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Photograph evidence in its original position before collection.</li>
+            <li>Package each item separately to prevent cross-contamination.</li>
+            <li>Label each item with case number, date, time, and collecting officer.</li>
+            <li>Log chain of custody beginning at the point of collection.</li>
+            <li>Submit evidence to the evidence unit before end of shift.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S13</span><span class="acc-title">K9 Requests</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Request K9 through dispatch, providing a summary of the situation and location.</li>
+            <li>Establish a perimeter and clear the deployment area of uninvolved persons.</li>
+            <li>Give way to the K9 handler's direction for deployment and announcements.</li>
+            <li>Document the deployment and outcome in the incident report.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S14</span><span class="acc-title">Air Support</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Request air support through dispatch with the nature of the call and last known location.</li>
+            <li>Provide ground units' positions to avoid confusion during aerial tracking.</li>
+            <li>Coordinate containment points as directed by the air unit.</li>
+            <li>Maintain radio discipline to keep the air-to-ground channel clear.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S15</span><span class="acc-title">Crash Investigations</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Secure the scene and request EMS if injuries are reported.</li>
+            <li>Direct traffic around the scene to prevent secondary collisions.</li>
+            <li>Photograph vehicle positions, damage, and relevant road conditions.</li>
+            <li>Interview involved parties and witnesses separately.</li>
+            <li>Complete a crash report documenting findings and any citations issued.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S16</span><span class="acc-title">Active Shooter</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>First arriving units move directly toward the threat to stop the killing.</li>
+            <li>Form a contact team of available officers rather than waiting for full staging.</li>
+            <li>Bypass injured persons initially; follow-on units handle rescue and medical tasks.</li>
+            <li>Communicate suspect description and location continuously as the team moves.</li>
+            <li>Establish rescue task force coordination with EMS once the threat is neutralized or contained.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S17</span><span class="acc-title">Hostage Incidents</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Contain the location and establish a perimeter without direct confrontation.</li>
+            <li>Notify Command Staff and request negotiator and SWAT response.</li>
+            <li>Gather intelligence on hostage-taker demands, number of hostages, and layout.</li>
+            <li>Defer all communication with the hostage-taker to trained negotiators.</li>
+            <li>Maintain perimeter security until a resolution is reached.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S18</span><span class="acc-title">Use of Force Continuum</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Officer presence and verbal commands — the baseline for nearly all contacts.</li>
+            <li>Soft empty-hand control for non-compliant but non-threatening subjects.</li>
+            <li>Hard empty-hand control or intermediate weapons for active resistance.</li>
+            <li>Less-lethal tools for assaultive resistance that does not present a deadly threat.</li>
+            <li>Deadly force, reserved solely for an imminent threat of death or serious bodily injury.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S19</span><span class="acc-title">Miranda Rights</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Determine whether the subject is in custody and about to be interrogated.</li>
+            <li>Read the standard Miranda warning clearly, in a language the subject understands.</li>
+            <li>Confirm the subject understands each right before proceeding with questioning.</li>
+            <li>Document the warning, time given, and the subject's response in the report.</li>
+          </ol>
+        </div>
+      </details>
+
+      <details class="accordion-item">
+        <summary><span class="acc-num">S20</span><span class="acc-title">Incident Documentation</span><span class="acc-chevron"></span></summary>
+        <div class="acc-body">
+          <ol>
+            <li>Note the time of dispatch, arrival, and clearance for every call.</li>
+            <li>Record all involved parties, witnesses, and their statements.</li>
+            <li>Attach photographs, body camera references, and evidence logs where applicable.</li>
+            <li>Submit the completed report for supervisor review before end of shift.</li>
+          </ol>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ POLICIES ============ -->
+<section class="section" id="policies">
+  <div class="section-inner">
+    <p class="section-eyebrow">GOVERNANCE</p>
+    <h2 class="section-title">Department Policies</h2>
+    <p class="section-lede">Core policy commitments that apply across every division and rank.</p>
+
+    <div class="policy-grid" data-searchable="policies">
+      <article class="policy-card reveal">
+        <div class="policy-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <h3>Professionalism</h3>
+        <p>All personnel represent the department in every interaction. Courteous, composed conduct is expected regardless of how a situation escalates.</p>
+      </article>
+      <article class="policy-card reveal">
+        <div class="policy-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20c1.4-4 4.2-6 7.5-6s6.1 2 7.5 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Bias-Free Policing</h3>
+        <p>Enforcement decisions are based on behavior and evidence, never on race, gender, religion, or any other protected characteristic.</p>
+      </article>
+      <article class="policy-card reveal">
+        <div class="policy-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="5" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M15 10l4-2v8l-4-2" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Body Camera Policy</h3>
+        <p>Body cameras are activated for all enforcement contacts and calls for service, and footage is retained per department retention schedules.</p>
+      </article>
+      <article class="policy-card reveal">
+        <div class="policy-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="9" width="18" height="9" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 9V6a4 4 0 018 0v3" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <h3>Vehicle Operation</h3>
+        <p>Patrol vehicles are operated safely and lawfully, with emergency equipment used only in accordance with pursuit and response policy.</p>
+      </article>
+      <article class="policy-card reveal">
+        <div class="policy-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 12l1.8 1.8L15 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Officer Appearance</h3>
+        <p>Uniform and grooming standards maintain a consistent, professional department image across every shift and division.</p>
+      </article>
+      <article class="policy-card reveal">
+        <div class="policy-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Social Media Policy</h3>
+        <p>Personal social media activity must not disclose confidential case information or misrepresent department positions.</p>
+      </article>
+      <article class="policy-card reveal">
+        <div class="policy-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 10V7a4 4 0 118 0v3" stroke="currentColor" stroke-width="1.8"/></svg>
+        </div>
+        <h3>Confidentiality</h3>
+        <p>Case details, personnel records, and ongoing investigations are shared only on a need-to-know basis within the department.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMMAND STAFF ============ -->
+<section class="section section-alt" id="command">
+  <div class="section-inner">
+    <p class="section-eyebrow">CHAIN OF COMMAND</p>
+    <h2 class="section-title">Command Staff</h2>
+    <p class="section-lede">The leadership structure overseeing department operations, policy, and discipline.</p>
+
+    <div class="staff-grid">
+      <article class="staff-card reveal">
+        <div class="staff-photo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.5" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1.5-4.5 4.5-6.5 7-6.5s5.5 2 7 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="staff-rank">Chief of Police</p>
+        <p class="staff-name">S.Renn</p>
+        <p class="staff-desc">Holds ultimate authority and accountability for department operations, policy direction, and public trust.</p>
+      </article>
+      <article class="staff-card reveal">
+        <div class="staff-photo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.5" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1.5-4.5 4.5-6.5 7-6.5s5.5 2 7 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="staff-rank">Assistant Chief</p>
+        <p class="staff-name">N/A</p>
+        <p class="staff-desc">Supports the Chief of Police in day-to-day operations and stands in during periods of absence.</p>
+      </article>
+      <article class="staff-card reveal">
+        <div class="staff-photo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.5" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1.5-4.5 4.5-6.5 7-6.5s5.5 2 7 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="staff-rank">Deputy Chief</p>
+        <p class="staff-name">N/A</p>
+        <p class="staff-desc">Oversees a major operational bureau and reports directly to the Assistant Chief.</p>
+      </article>
+      <article class="staff-card reveal">
+        <div class="staff-photo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.5" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1.5-4.5 4.5-6.5 7-6.5s5.5 2 7 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="staff-rank">Major</p>
+        <p class="staff-name">N/A</p>
+        <p class="staff-desc">Commands a division-level command staff and coordinates between captains and department leadership.</p>
+      </article>
+      <article class="staff-card reveal">
+        <div class="staff-photo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.5" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1.5-4.5 4.5-6.5 7-6.5s5.5 2 7 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="staff-rank">Captain</p>
+        <p class="staff-name">N/A</p>
+        <p class="staff-desc">Manages a specific precinct or specialty unit, including scheduling, training, and performance oversight.</p>
+      </article>
+      <article class="staff-card reveal">
+        <div class="staff-photo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8.5" r="3.5" stroke="currentColor" stroke-width="1.6"/><path d="M5 20c1.5-4.5 4.5-6.5 7-6.5s5.5 2 7 6.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <p class="staff-rank">Lieutenant</p>
+        <p class="staff-name">Name Placeholder</p>
+        <p class="staff-desc">Serves as Watch Commander for an assigned shift, directly supervising sergeants and patrol operations.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RADIO CODES ============ -->
+<section class="section section-alt" id="codes">
+  <div class="section-inner">
+    <p class="section-eyebrow">COMMS REFERENCE</p>
+    <h2 class="section-title">Radio Codes</h2>
+    <p class="section-lede">Standard radio codes used across department channels. Use the search box above to filter this table instantly.</p>
+
+    <div class="code-filter-row">
+      <button class="filter-chip active" data-filter="all">All</button>
+      <button class="filter-chip" data-filter="10-code">10 Codes</button>
+      <button class="filter-chip" data-filter="signal">Signal Codes</button>
+      <button class="filter-chip" data-filter="status">Status Codes</button>
+      <button class="filter-chip" data-filter="priority">Priority Levels</button>
+    </div>
+
+    <div class="code-table-wrap" data-searchable="codes">
+      <table class="code-table" id="codeTable">
+        <thead>
+          <tr><th>Code</th><th>Meaning</th><th>Category</th></tr>
+        </thead>
+        <tbody id="codeTableBody">
+          <!-- populated by script.js -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer" id="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="brand-badge" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="26" height="26">
+          <path d="M24 3 L43 11 V22 C43 33 35.5 41.5 24 45 C12.5 41.5 5 33 5 22 V11 Z" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        </svg>
+      </span>
+      <div>
+        <p class="footer-title">Fort Worth Police Department</p>
+        <p class="footer-tag">Integrity • Service • Professionalism</p>
+      </div>
+    </div>
+
+    <nav class="footer-links" aria-label="Footer">
+      <a href="#home">Home</a>
+      <a href="#handbook">Handbook</a>
+      <a href="#sop">SOP</a>
+      <a href="#policies">Policies</a>
+      <a href="#command">Command Staff</a>
+      <a href="#codes">Radio Codes</a>
+    </nav>
+
+    <div class="footer-social" aria-label="Social links">
+      <a href="#" aria-label="Discord"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M8 9c1.2-.6 2.5-.9 4-.9s2.8.3 4 .9M6 16c3.5 1.6 8.5 1.6 12 0M7 16c-1.2 1.4-2 1.9-3 2 0-2 .3-6.5 2-9.5C7.5 6.7 9.6 6 12 6s4.5.7 6 2.5c1.7 3 2 7.5 2 9.5-1-.1-1.8-.6-3-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#" aria-label="Twitter/X"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
+      <a href="#" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M11 10l4 2-4 2v-4z" fill="currentColor"/></svg></a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; <span id="year"></span> Fort Worth Police Department — Roleplay Server. Fictional department for community roleplay purposes only.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  const RADIO_CODES = [
+    { code: '10-1',  meaning: 'Receiving poorly / signal weak', cat: '10-code' },
+    { code: '10-2',  meaning: 'Receiving well', cat: '10-code' },
+    { code: '10-4',  meaning: 'Acknowledged / understood', cat: '10-code' },
+    { code: '10-6',  meaning: 'Busy, stand by unless urgent', cat: '10-code' },
+    { code: '10-7',  meaning: 'Out of service', cat: '10-code' },
+    { code: '10-7B', meaning: 'Out of service, mechanical trouble', cat: '10-code' },
+    { code: '10-8',  meaning: 'In service, available for calls', cat: '10-code' },
+    { code: '10-9',  meaning: 'Repeat last transmission', cat: '10-code' },
+    { code: '10-12', meaning: 'Visitors or civilians present', cat: '10-code' },
+    { code: '10-15', meaning: 'Subject in custody', cat: '10-code' },
+    { code: '10-19', meaning: 'Return to station', cat: '10-code' },
+    { code: '10-20', meaning: 'Location / advise location', cat: '10-code' },
+    { code: '10-21', meaning: 'Telephone this unit', cat: '10-code' },
+    { code: '10-22', meaning: 'Disregard last assignment', cat: '10-code' },
+    { code: '10-23', meaning: 'Arrived at scene', cat: '10-code' },
+    { code: '10-24', meaning: 'Assignment complete', cat: '10-code' },
+    { code: '10-27', meaning: 'Request driver license information', cat: '10-code' },
+    { code: '10-28', meaning: 'Request vehicle registration information', cat: '10-code' },
+    { code: '10-29', meaning: 'Check for wants / warrants', cat: '10-code' },
+    { code: '10-31', meaning: 'Crime in progress', cat: '10-code' },
+    { code: '10-32', meaning: 'Person with a weapon', cat: '10-code' },
+    { code: '10-33', meaning: 'Emergency, all units stand by', cat: '10-code' },
+    { code: '10-38', meaning: 'Traffic stop', cat: '10-code' },
+    { code: '10-39', meaning: 'Responding with lights and siren', cat: '10-code' },
+    { code: '10-41', meaning: 'Beginning tour of duty', cat: '10-code' },
+    { code: '10-42', meaning: 'Ending tour of duty', cat: '10-code' },
+    { code: '10-46', meaning: 'Assist motorist', cat: '10-code' },
+    { code: '10-50', meaning: 'Vehicle collision', cat: '10-code' },
+    { code: '10-52', meaning: 'Request EMS / ambulance', cat: '10-code' },
+    { code: '10-70', meaning: 'Fire alarm / report of fire', cat: '10-code' },
+    { code: '10-76', meaning: 'En route to scene', cat: '10-code' },
+    { code: '10-78', meaning: 'Request additional units / backup', cat: '10-code' },
+    { code: '10-79', meaning: 'Notify coroner', cat: '10-code' },
+    { code: '10-80', meaning: 'Vehicle pursuit in progress', cat: '10-code' },
+    { code: '10-97', meaning: 'Arrived at assigned location', cat: '10-code' },
+    { code: '10-99', meaning: 'Officer needs urgent assistance', cat: '10-code' },
+    { code: 'Signal 0',  meaning: 'Officer down / officer needs help now', cat: 'signal' },
+    { code: 'Signal 1',  meaning: 'Meet complainant', cat: 'signal' },
+    { code: 'Signal 5',  meaning: 'Escort', cat: 'signal' },
+    { code: 'Signal 7',  meaning: 'Deceased person', cat: 'signal' },
+    { code: 'Signal 11', meaning: 'Fire', cat: 'signal' },
+    { code: 'Signal 20', meaning: 'Robbery in progress', cat: 'signal' },
+    { code: 'Signal 25', meaning: 'Domestic disturbance', cat: 'signal' },
+    { code: 'Signal 30', meaning: 'Suspicious vehicle', cat: 'signal' },
+    { code: 'Signal 33', meaning: 'Riot / large disturbance', cat: 'signal' },
+    { code: 'Signal 40', meaning: 'Missing person', cat: 'signal' },
+    { code: 'Signal 46', meaning: 'Intoxicated driver', cat: 'signal' },
+    { code: 'Signal 63', meaning: 'Prowler', cat: 'signal' },
+    { code: 'Code 1', meaning: 'Routine, no lights or siren', cat: 'priority' },
+    { code: 'Code 2', meaning: 'Urgent, no lights or siren, expedite', cat: 'priority' },
+    { code: 'Code 3', meaning: 'Emergency response, lights and siren', cat: 'priority' },
+    { code: 'Code 4', meaning: 'Scene secure, no further assistance needed', cat: 'priority' },
+    { code: 'Code 5', meaning: 'Stakeout / surveillance in progress', cat: 'priority' },
+    { code: 'Code 6', meaning: 'Out for investigation, avoid the area', cat: 'priority' },
+    { code: 'Priority 1', meaning: 'Life-threatening emergency, immediate response', cat: 'priority' },
+    { code: 'Priority 2', meaning: 'Urgent, in-progress or recent crime', cat: 'priority' },
+    { code: 'Priority 3', meaning: 'Routine call for service', cat: 'priority' },
+    { code: 'Priority 4', meaning: 'Non-urgent, can be scheduled', cat: 'priority' },
+    { code: 'Status: 10-8',  meaning: 'Unit available for dispatch', cat: 'status' },
+    { code: 'Status: 10-7',  meaning: 'Unit unavailable / out of service', cat: 'status' },
+    { code: 'Status: 10-6',  meaning: 'Unit busy on assignment', cat: 'status' },
+    { code: 'Status: Code 4', meaning: 'Situation stable, scene secure', cat: 'status' },
+    { code: 'Status: En Route', meaning: 'Unit traveling to assigned call', cat: 'status' },
+    { code: 'Status: On Scene', meaning: 'Unit has arrived and is handling the call', cat: 'status' },
+    { code: 'Status: Transporting', meaning: 'Unit transporting a subject or patient', cat: 'status' },
+    { code: 'Status: Report', meaning: 'Unit completing paperwork, available if urgent', cat: 'status' },
+  ];
+
+  const CATEGORY_LABEL = {
+    '10-code': '10 Code',
+    'signal': 'Signal',
+    'priority': 'Priority',
+    'status': 'Status',
+  };
+
+  const codeTableBody = document.getElementById('codeTableBody');
+  function renderCodes(filter = 'all') {
+    codeTableBody.innerHTML = '';
+    RADIO_CODES.forEach(row => {
+      if (filter !== 'all' && row.cat !== filter) return;
+      const tr = document.createElement('tr');
+      tr.dataset.cat = row.cat;
+      tr.innerHTML = `
+        <td>${row.code}</td>
+        <td>${row.meaning}</td>
+        <td><span class="cat-badge">${CATEGORY_LABEL[row.cat]}</span></td>
+      `;
+      codeTableBody.appendChild(tr);
+    });
+  }
+  renderCodes();
+
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      renderCodes(chip.dataset.filter);
+    });
+  });
+
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  const moonIcon = document.getElementById('themeIconMoon');
+  const sunIcon = document.getElementById('themeIconSun');
+
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    if (theme === 'light') {
+      moonIcon.style.display = 'none';
+      sunIcon.style.display = 'block';
+    } else {
+      moonIcon.style.display = 'block';
+      sunIcon.style.display = 'none';
+    }
+  }
+
+  let savedTheme = 'dark';
+  try {
+    savedTheme = localStorage.getItem('fwpd-theme') || 'dark';
+  } catch (e) { /* localStorage unavailable */ }
+  applyTheme(savedTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    const next = current === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try { localStorage.setItem('fwpd-theme', next); } catch (e) { /* ignore */ }
+  });
+
+  const hamburger = document.getElementById('hamburger');
+  const navLinksEl = document.getElementById('navLinks');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = navLinksEl.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  navLinksEl.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinksEl.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  const searchToggle = document.getElementById('searchToggle');
+  const searchClose = document.getElementById('searchClose');
+  const searchPanel = document.getElementById('searchPanel');
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  function openSearch() {
+    searchPanel.classList.add('open');
+    searchToggle.setAttribute('aria-expanded', 'true');
+    setTimeout(() => searchInput.focus(), 150);
+  }
+  function closeSearch() {
+    searchPanel.classList.remove('open');
+    searchToggle.setAttribute('aria-expanded', 'false');
+  }
+  searchToggle.addEventListener('click', () => {
+    searchPanel.classList.contains('open') ? closeSearch() : openSearch();
+  });
+  searchClose.addEventListener('click', closeSearch);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSearch();
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  function buildIndex() {
+    const index = [];
+
+    document.querySelectorAll('[data-searchable="handbook"] .accordion-item, [data-searchable="sop"] .accordion-item').forEach(item => {
+      const title = item.querySelector('.acc-title')?.textContent.trim() || '';
+      const body = item.querySelector('.acc-body')?.textContent.trim().replace(/\s+/g, ' ') || '';
+      const parentSection = item.closest('[data-searchable]').dataset.searchable;
+      index.push({
+        category: parentSection === 'handbook' ? 'Handbook' : 'SOP',
+        title,
+        snippet: body.slice(0, 140) + (body.length > 140 ? '…' : ''),
+        el: item,
+      });
+    });
+
+    document.querySelectorAll('[data-searchable="policies"] .policy-card').forEach(card => {
+      const title = card.querySelector('h3')?.textContent.trim() || '';
+      const body = card.querySelector('p')?.textContent.trim() || '';
+      index.push({ category: 'Policy', title, snippet: body, el: card });
+    });
+
+    RADIO_CODES.forEach(row => {
+      index.push({
+        category: 'Radio Code',
+        title: row.code,
+        snippet: row.meaning,
+        el: document.getElementById('codes'),
+      });
+    });
+
+    return index;
+  }
+  const searchIndex = buildIndex();
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${escaped})`, 'ig'), '<mark>$1</mark>');
+  }
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    searchResults.innerHTML = '';
+    if (!q) return;
+
+    const matches = searchIndex.filter(item =>
+      item.title.toLowerCase().includes(q) || item.snippet.toLowerCase().includes(q)
+    ).slice(0, 30);
+
+    if (!matches.length) {
+      searchResults.innerHTML = `<div class="search-empty">No matches for "${searchInput.value}".</div>`;
+      return;
+    }
+
+    matches.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'search-result';
+      div.innerHTML = `
+        <div class="sr-cat">${m.category}</div>
+        <div class="sr-title">${highlight(m.title, searchInput.value.trim())}</div>
+        <div class="sr-snippet">${highlight(m.snippet, searchInput.value.trim())}</div>
+      `;
+      div.addEventListener('click', () => {
+        closeSearch();
+        if (m.el.tagName === 'DETAILS') m.el.open = true;
+        m.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        m.el.style.transition = 'box-shadow .4s ease';
+        m.el.style.boxShadow = '0 0 0 3px var(--accent-glow)';
+        setTimeout(() => { m.el.style.boxShadow = ''; }, 1600);
+      });
+      searchResults.appendChild(div);
+    });
+  });
+
+  const navbar = document.getElementById('navbar');
+  const scrollProgress = document.getElementById('scrollProgress');
+  const backToTop = document.getElementById('backToTop');
+  const heroBg = document.getElementById('heroBg');
+  const navAnchors = document.querySelectorAll('.nav-link');
+  const sections = Array.from(navAnchors).map(a => document.querySelector(a.getAttribute('href')));
+
+  let ticking = false;
+  function onScroll() {
+    const scrollY = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+    scrollProgress.style.width = progress + '%';
+
+    navbar.classList.toggle('scrolled', scrollY > 40);
+    backToTop.classList.toggle('visible', scrollY > 700);
+
+    if (heroBg) {
+      const parallax = Math.min(scrollY * 0.28, 160);
+      heroBg.style.transform = `translateY(${parallax}px)`;
+    }
+
+    let currentIndex = 0;
+    sections.forEach((sec, i) => {
+      if (sec && sec.getBoundingClientRect().top - 110 <= 0) currentIndex = i;
+    });
+    navAnchors.forEach((a, i) => a.classList.toggle('active', i === currentIndex));
+
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }, { passive: true });
+  onScroll();
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in-view'));
+  }
+
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+})();
+
+</script>
+</body>
+</html>
